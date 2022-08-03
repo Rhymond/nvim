@@ -3,11 +3,17 @@ Plug 'nvim-treesitter/nvim-treesitter', {'do': ':TSUpdate'}
 Plug 'neovim/nvim-lspconfig'
 Plug 'projekt0n/github-nvim-theme'
 
+" sessions
+Plug 'Shatur/neovim-session-manager'
+
+" alpha dashboard
+Plug 'goolord/alpha-nvim'
+
+" project management
+Plug 'ahmedkhalf/project.nvim'
+
 " signature
 Plug 'ray-x/lsp_signature.nvim'
-
-" clipboard
-Plug 'AckslD/nvim-neoclip.lua'
 
 " autoclose
 Plug 'windwp/nvim-ts-autotag'
@@ -65,9 +71,6 @@ Plug 'kyazdani42/nvim-tree.lua'
 " lsp saga
 Plug 'glepnir/lspsaga.nvim'
 
-" spell check
-Plug 'lewis6991/spellsitter.nvim'
-
 " cmp
 Plug 'hrsh7th/cmp-nvim-lsp'
 Plug 'hrsh7th/cmp-buffer'
@@ -84,9 +87,6 @@ Plug 'saadparwaiz1/cmp_luasnip'
 Plug 'lewis6991/gitsigns.nvim'
 Plug 'kdheepak/lazygit.nvim'
 
-" fugitive
-Plug 'tpope/vim-fugitive'
-
 " statusline
 Plug 'nvim-lualine/lualine.nvim'
 call plug#end()
@@ -97,6 +97,8 @@ colorscheme github_dark_default
 set termguicolors
 let $NVIM_TUI_ENABLE_TRUE_COLOR=1
 syntax enable
+
+set guifont=JetBrainsMono\ Nerd\ Font\ Mono:h15
 
 set nocompatible            " disable compatibility to old-time vi
 set showmatch               " show matching 
@@ -117,13 +119,19 @@ set wildmode=longest,list   " get bash-like tab completions
 " filetype indent plugin on
 autocmd Filetype typescriptreact setlocal expandtab tabstop=2 shiftwidth=2 softtabstop=2
 autocmd Filetype typescript setlocal expandtab tabstop=2 shiftwidth=2 softtabstop=2
+autocmd Filetype javascript setlocal expandtab tabstop=2 shiftwidth=2 softtabstop=2
+
+" Neovide cfg
+let g:neovide_cursor_animation_length=0
+let g:neovide_cursor_trail_length=0
+let g:neovide_refresh_rate=50
 
 syntax on                   " syntax highlighting
 set mouse=a                 " enable mouse click
 set clipboard=unnamed       " using system clipboard
 set cursorline              " highlight current cursorline
 set ttyfast                 " Speed up scrolling in Vim
-set nohlsearch
+set hlsearch
 set splitright
 set splitbelow
 set laststatus=3
@@ -132,9 +140,14 @@ set list
 set wrap
 set inccommand=nosplit
 set number relativenumber
+set cmdheight=0
+" set shortmess=a
 " set completeopt=menu,menuone,noselect
 
 lua require('_telescope')
+lua require('_sessions')
+lua require('_alpha')
+lua require('_project')
 lua require('_statusline')
 lua require('_gitsigns')
 lua require('_treesitter')
@@ -144,32 +157,25 @@ lua require('_go')
 lua require('_comment')
 lua require('_tree')
 lua require('_trouble')
-lua require('_spellsitter')
 lua require('_autotags')
 lua require('_luasnip')
-lua require('_neoclip')
 lua require('_signature')
 
 " shortcuts
-nnoremap <leader>ff <cmd>Telescope find_files hidden=true<cr>
+nnoremap <leader>ff <cmd>Telescope find_files<cr>
 nnoremap <leader>fg <cmd>Telescope live_grep<cr>
 nnoremap <leader>fb <cmd>Telescope buffers<cr>
 nnoremap <leader>fh <cmd>Telescope help_tags<cr>
 nnoremap <leader>fs <cmd>Telescope file_browser<cr>
 nnoremap <leader>fr <cmd>Telescope registers<cr>
-nnoremap <leader>fc <cmd>Telescope neoclip unnamed<cr>
 nnoremap <leader>gr <cmd>Telescope lsp_references<cr>
 nnoremap <leader>gi <cmd>Telescope lsp_implementations<cr>
 nnoremap <leader>gd <cmd>Telescope lsp_definitions<cr>
+nnoremap <leader>fp <cmd>Telescope projects<cr>
 
-" nnoremap <leader>ga <cmd>Git add .<cr>
-" nnoremap <leader>gc <cmd>Git commit<cr>
-" nnoremap <leader>gp <cmd>Git push<cr>
-
-tnoremap <ESC> <C-\><C-n>
-
-nnoremap <c-s> :update<cr>
-inoremap <c-s> <esc>:update<cr>
+nnoremap <c-s> :update!<cr>
+inoremap <c-s> <esc>:update!<cr>
+inoremap <c-v> <c-r>*
 
 nnoremap <C-n> :NvimTreeToggle<cr>
 nnoremap <leader>r :NvimTreeRefresh<cr>
@@ -195,4 +201,7 @@ nnoremap <leader>gor :GoRename<cr>
 nnoremap <leader>got :GoTestFunc<cr>
 nnoremap <leader>gof :GoFillStruct<cr>
 
-nnoremap <silent> <leader>gg :LazyGit<CR>
+nnoremap <silent> <leader>gg :LazyGit<cr>
+nnoremap <silent>tn :tabnew<cr>
+nnoremap <silent>tc :tabclose<cr>
+tnoremap <Esc> <C-\><C-n>
