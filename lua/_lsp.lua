@@ -1,3 +1,4 @@
+require("nvim-lsp-installer").setup {}
 local lsp = require "lspconfig"
 local null_ls = require "null-ls"
 local util = require "vim.lsp.util"
@@ -5,7 +6,7 @@ local util = require "vim.lsp.util"
 local formatting_callback = function(client, bufnr)
   vim.keymap.set('n', '<space>f', function()
     local params = util.make_formatting_params({})
-    client.request('textDocument/formatting', params, nil, bufnr) 
+    client.request('textDocument/formatting', params, nil, bufnr)
   end, {buffer = bufnr})
 end
 
@@ -33,14 +34,23 @@ local on_attach = function(client, bufnr)
     })
 end
 
-local capabilities = require('cmp_nvim_lsp').update_capabilities(vim.lsp.protocol.make_client_capabilities())
+local cap = vim.lsp.protocol.make_client_capabilities()
+cap.textDocument.completion.completionItem.snippetSupport = true
+local capabilities = require('cmp_nvim_lsp').update_capabilities(cap)
+
+lsp.cssls.setup({
+    capabilities = capabilities,
+    on_attach = function(client, bufnr)
+        formatting_callback(client, bufnr)
+        on_attach(client, bufnr)
+    end
+})
 
 lsp.tsserver.setup({
     capabilities = capabilities,
     on_attach = function(client, bufnr)
         local opts = { silent=true }
         on_attach(client, bufnr)
-        
         local ts_utils = require("nvim-lsp-ts-utils")
         ts_utils.setup({})
         ts_utils.setup_client(client)
@@ -49,11 +59,35 @@ lsp.tsserver.setup({
     end,
 })
 
+lsp.sumneko_lua.setup({
+    capabilities = capabilities,
+    on_attach = function(client, bufnr)
+        formatting_callback(client, bufnr)
+        on_attach(client, bufnr)
+    end,
+})
+
 
 lsp.gopls.setup({
     capabilities = capabilities,
     on_attach = function(client, bufnr)
         formatting_callback(client, bufnr)
+        on_attach(client, bufnr)
+    end
+})
+
+lsp.marksman.setup({
+    capabilities = capabilities,
+    on_attach = function(client, bufnr)
+        -- formatting_callback(client, bufnr)
+        on_attach(client, bufnr)
+    end
+})
+
+lsp.grammarly.setup({
+    capabilities = capabilities,
+    on_attach = function(client, bufnr)
+        -- formatting_callback(client, bufnr)
         on_attach(client, bufnr)
     end
 })

@@ -1,5 +1,5 @@
 local lib = require'nvim-tree.lib'
-local openfile = require'nvim-tree.actions.open-file'
+local openfile = require'nvim-tree.actions.node.open-file'
 local actions = require'telescope.actions'
 local action_state = require'telescope.actions.state'
 local M = {}
@@ -44,7 +44,7 @@ function M.launch_telescope(func_name, opts)
   opts.cwd = basedir
   opts.search_dirs = { basedir }
   opts.attach_mappings = view_selection
-  return require("telescope.builtin.files")[func_name](opts)
+  return require("telescope.builtin.__files")[func_name](opts)
 end
 
 return M

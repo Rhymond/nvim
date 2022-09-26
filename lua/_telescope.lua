@@ -1,14 +1,16 @@
 local ok, telescope = pcall(require, "telescope")
+local actions = require "telescope.actions"
 if not ok then
   return
 end
 
 telescope.setup({
   defaults = {
+    path_display={"smart"},
     vimgrep_arguments = {
       "rg",
-      "--no-heading",
       "--with-filename",
+      "--no-heading",
       "--line-number",
       "--column",
       "--smart-case",
@@ -35,7 +37,6 @@ telescope.setup({
     file_sorter = require("telescope.sorters").get_fuzzy_file,
     file_ignore_patterns = {},
     generic_sorter = require("telescope.sorters").get_generic_fuzzy_sorter,
-    path_display = { "absolute" },
     winblend = 0,
     border = {},
     borderchars = { "─", "│", "─", "│", "╭", "╮", "╯", "╰" },
@@ -48,6 +49,15 @@ telescope.setup({
     -- Developer configurations: Not meant for general override
     buffer_previewer_maker = require("telescope.previewers").buffer_previewer_maker,
   },
+  pickers = {
+    buffers = {
+      mappings = {
+        i = {
+          ["<c-d>"] = actions.delete_buffer,
+        },
+      },
+    },
+  },
   extensions = {
     fzf = {
       fuzzy = true, -- false will only do exact matching
@@ -58,3 +68,5 @@ telescope.setup({
     },
   },
 })
+
+require('telescope').load_extension('fzf')

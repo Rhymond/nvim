@@ -1,8 +1,18 @@
 call plug#begin(has('nvim') ? stdpath('data') . '/plugged' : '~/.vim/plugged')
 Plug 'nvim-treesitter/nvim-treesitter', {'do': ':TSUpdate'}
+Plug 'williamboman/nvim-lsp-installer'
 Plug 'neovim/nvim-lspconfig'
 Plug 'projekt0n/github-nvim-theme'
+Plug 'nvim-telescope/telescope-fzf-native.nvim', { 'do': 'make' }
 
+" PHP blade
+Plug 'jwalton512/vim-blade'
+
+" debugger
+Plug 'mfussenegger/nvim-dap'
+
+" markdown
+Plug 'iamcco/markdown-preview.nvim', { 'do': 'cd app && yarn install' }
 " sessions
 Plug 'Shatur/neovim-session-manager'
 
@@ -46,6 +56,7 @@ Plug 'jose-elias-alvarez/nvim-lsp-ts-utils'
 
 " go
 Plug 'ray-x/go.nvim'
+Plug 'ray-x/guihua.lua'
 
 " motion
 Plug 'ggandor/lightspeed.nvim'
@@ -91,6 +102,10 @@ Plug 'kdheepak/lazygit.nvim'
 Plug 'nvim-lualine/lualine.nvim'
 call plug#end()
 
+if has('nvim') && executable('nvr')
+  let $GIT_EDITOR = "nvr -cc split --remote-wait +'set bufhidden=wipe'"
+endif
+
 " colorscheme evening
 colorscheme github_dark_default
 
@@ -98,7 +113,7 @@ set termguicolors
 let $NVIM_TUI_ENABLE_TRUE_COLOR=1
 syntax enable
 
-set guifont=JetBrainsMono\ Nerd\ Font\ Mono:h15
+ set guifont=JetBrainsMono\ Nerd\ Font\ Mono:h15
 
 set nocompatible            " disable compatibility to old-time vi
 set showmatch               " show matching 
@@ -117,6 +132,7 @@ set wildmode=longest,list   " get bash-like tab completions
 " set cc=80                   " set an 80 column border for good coding style
 " set smartindent
 " filetype indent plugin on
+set so=999
 autocmd Filetype typescriptreact setlocal expandtab tabstop=2 shiftwidth=2 softtabstop=2
 autocmd Filetype typescript setlocal expandtab tabstop=2 shiftwidth=2 softtabstop=2
 autocmd Filetype javascript setlocal expandtab tabstop=2 shiftwidth=2 softtabstop=2
@@ -140,9 +156,10 @@ set list
 set wrap
 set inccommand=nosplit
 set number relativenumber
-set cmdheight=0
+" set cmdheight=0
 " set shortmess=a
 " set completeopt=menu,menuone,noselect
+
 
 lua require('_telescope')
 lua require('_sessions')
@@ -160,6 +177,7 @@ lua require('_trouble')
 lua require('_autotags')
 lua require('_luasnip')
 lua require('_signature')
+lua require('_symbols')
 
 " shortcuts
 nnoremap <leader>ff <cmd>Telescope find_files<cr>
@@ -198,7 +216,7 @@ nnoremap <leader>tso :TSLspOrganize<cr>
 
 nnoremap <leader>goi :GoImport<cr>
 nnoremap <leader>gor :GoRename<cr>
-nnoremap <leader>got :GoTestFunc<cr>
+nnoremap <leader>got :GoTestFunc -F -v<cr>
 nnoremap <leader>gof :GoFillStruct<cr>
 
 nnoremap <silent> <leader>gg :LazyGit<cr>
