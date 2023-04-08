@@ -1,14 +1,8 @@
-local has_words_before = function()
-  local line, col = unpack(vim.api.nvim_win_get_cursor(0))
-  return col ~= 0 and vim.api.nvim_buf_get_lines(0, line - 1, line, true)[1]:sub(col, col):match("%s") == nil
-end
-
 local luasnip = require("luasnip")
 local cmp = require("cmp")
 
 cmp.setup({
     snippet = {
-      -- REQUIRED - you must specify a snippet engine
       expand = function(args)
         require('luasnip').lsp_expand(args.body) -- For `luasnip` users.
       end,
@@ -47,9 +41,9 @@ cmp.setup({
     sources = cmp.config.sources({
       { name = 'nvim_lsp' },
       { name = 'luasnip' },
-      { name = 'buffer' },
+      -- { name = 'buffer' },
       { name = 'path' },
-      { name = 'cmdline' },
+      -- { name = 'cmdline' },
     }),
     formatting = {
       format = function(entry, item)

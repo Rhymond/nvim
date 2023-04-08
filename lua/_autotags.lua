@@ -1,5 +1,4 @@
 local autotag = require('nvim-ts-autotag')
-require('nvim-autopairs').setup{}
 
 autotag.setup({
     check_ts = true,
