@@ -20,7 +20,9 @@ require("lazy").setup({
     require("_theme"),
     require("_go"),
 
+    -- AI
     "github/copilot.vim",
+    -- "madox2/vim-ai",
 
     -- Telescope
     {
@@ -35,10 +37,12 @@ require("lazy").setup({
 
     -- Misc
     require("_motion"),
-    require("_surround"),
-    -- require("_tree"),
+    require("_explorer"),
+    require("_splitjoin"),
     require("_repl"),
     require("_harpoon"),
+    require("_surround"),
+    "nvim-tree/nvim-web-devicons",
     "ahmedkhalf/project.nvim",
     "windwp/nvim-ts-autotag",
     "windwp/nvim-autopairs",
@@ -47,8 +51,6 @@ require("lazy").setup({
     "numToStr/Comment.nvim",
     "JoosepAlviste/nvim-ts-context-commentstring",
     "nvim-lualine/lualine.nvim",
-    "nanotee/sqls.nvim",
-    "AndrewRadev/splitjoin.vim",
 
     -- Autocomplete
     {

@@ -21,8 +21,9 @@ vim.keymap.set("n", "<leader>dl", dap.run_last, { silent = true })
 
 
 -- Telescope
--- -- TODO: add neoclip
-vim.keymap.set("n", "<leader>ff", builtin.find_files, {})
+vim.keymap.set("n", "<leader>ff", function()
+  require("telescope.builtin").find_files({cwd = require("oil").get_current_dir()})
+end, {})
 vim.keymap.set("n", "<leader>fg", extensions.live_grep_args.live_grep_args, {})
 vim.keymap.set("n", "<leader>gs", builtin.git_status, {})
 vim.keymap.set("n", "<leader>fb", builtin.buffers, {})
@@ -37,14 +38,14 @@ vim.keymap.set("n", "<leader>xx", "<cmd>TroubleToggle<cr>", { silent = true, nor
 -- Merge Tool, Diff View
 vim.keymap.set("n", "<leader>dv", "<cmd>DiffViewOpen<cr>", { silent = true })
 
+-- Oil
+vim.keymap.set("n", "<leader>or", "<cmd>:e .<cr>", { silent = true })
+vim.keymap.set("n", "<leader>oc", "<cmd>:e %:p:h<cr>", { silent = true })
+
 -- nnoremap <c-s> :update!<cr>
 -- inoremap <c-s> <esc>:update!<cr>
 -- inoremap <c-v> <c-r>*
 --
-vim.keymap.set("n", "<leader>nr", "<cmd>Neotree reveal<cr>")
-vim.keymap.set("n", "<leader>nb", "<cmd>Neotree buffers<cr>")
-vim.keymap.set("n", "<leader>ng", "<cmd>Neotree git_status<cr>")
-
 -- :tnoremap <A-h> <C-\><C-N><C-w>h
 -- :tnoremap <A-j> <C-\><C-N><C-w>j
 -- :tnoremap <A-k> <C-\><C-N><C-w>k
@@ -82,3 +83,6 @@ vim.keymap.set("n", "<leader>got", "<cmd>GoTestFunc -F -v<cr>", { silent = true,
 vim.keymap.set("n", "<leader>tn", "<cmd>tabnew<cr>", { silent = true, noremap = true })
 vim.keymap.set("n", "<leader>tc", "<cmd>tabclose<cr>", { silent = true, noremap = true })
 vim.keymap.set("t", "<Esc>", "<C-\\><C-n>", { silent = true, noremap = true })
+
+vim.keymap.set("n", "<leader>e", "<cmd>:Ex<cr>", { silent = true, noremap = true })
+vim.keymap.set("n", "<leader>c", "<cmd>:Copilot panel<cr>", { silent = true, noremap = true })
