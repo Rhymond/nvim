@@ -1,8 +1,9 @@
 local builtin = require('telescope.builtin')
 local extensions = require('telescope').extensions
-local dap = require('dap')
-local dapgo = require('dap-go')
-local dapui = require('dapui')
+-- local dap = require('dap')
+-- local dapgo = require('dap-go')
+-- local dapui = require('dapui')
+local neotest = require('neotest')
 
 -- A typical debug flow consists of:
 --
@@ -10,19 +11,22 @@ local dapui = require('dapui')
 -- Launching debug sessions and resuming execution via :lua require'dap'.continue().
 -- Stepping through code via :lua require'dap'.step_over() and :lua require'dap'.step_into().
 -- Inspecting the state via the built-in REPL: :lua require'dap'.repl.open() or using the widget UI (:help dap-widgets)
-vim.keymap.set("n", "<leader>b", dap.toggle_breakpoint, { silent = true })
-vim.keymap.set("n", "<F5>", dap.continue, { silent = true })
-vim.keymap.set("n", "<F10>", dap.step_over, { silent = true })
-vim.keymap.set("n", "<F11>", dap.step_into, { silent = true })
-vim.keymap.set("n", "<F12>", dap.step_out, { silent = true })
-vim.keymap.set("n", "<leader>dt", dapgo.debug_test, { silent = true })
-vim.keymap.set("n", "<leader>do", dapui.toggle, { silent = true })
-vim.keymap.set("n", "<leader>dl", dap.run_last, { silent = true })
+-- vim.keymap.set("n", "<leader>b", dap.toggle_breakpoint, { silent = true })
+-- vim.keymap.set("n", "<F5>", dap.continue, { silent = true })
+-- vim.keymap.set("n", "<F10>", dap.step_over, { silent = true })
+-- vim.keymap.set("n", "<F11>", dap.step_into, { silent = true })
+-- vim.keymap.set("n", "<F12>", dap.step_out, { silent = true })
+-- vim.keymap.set("n", "<leader>dt", dapgo.debug_test, { silent = true })
+-- vim.keymap.set("n", "<leader>do", dapui.toggle, { silent = true })
+-- vim.keymap.set("n", "<leader>dl", dap.run_last, { silent = true })
 
 
 -- Telescope
 vim.keymap.set("n", "<leader>ff", function()
-  require("telescope.builtin").find_files({cwd = require("oil").get_current_dir()})
+    require("telescope.builtin").find_files({ cwd = require("oil").get_current_dir() })
+end, {})
+vim.keymap.set("n", "<leader>fg", function()
+    require("telescope.builtin").live_grep({ cwd = require("oil").get_current_dir() })
 end, {})
 vim.keymap.set("n", "<leader>fg", extensions.live_grep_args.live_grep_args, {})
 vim.keymap.set("n", "<leader>gs", builtin.git_status, {})
@@ -30,10 +34,9 @@ vim.keymap.set("n", "<leader>fb", builtin.buffers, {})
 vim.keymap.set("n", "<leader>gr", builtin.lsp_references, {})
 vim.keymap.set("n", "<leader>gi", builtin.lsp_implementations, {})
 vim.keymap.set("n", "<leader>gd", builtin.lsp_definitions, {})
-vim.keymap.set("n", "<leader>fp", extensions.projects.projects, {})
 
 -- Trouble
-vim.keymap.set("n", "<leader>xx", "<cmd>TroubleToggle<cr>", { silent = true, noremap = true })
+vim.keymap.set("n", "<leader>xx", "<cmd>TroubleToggle quickfix<cr>", { silent = true, noremap = true })
 
 -- Merge Tool, Diff View
 vim.keymap.set("n", "<leader>dv", "<cmd>DiffViewOpen<cr>", { silent = true })
@@ -41,6 +44,10 @@ vim.keymap.set("n", "<leader>dv", "<cmd>DiffViewOpen<cr>", { silent = true })
 -- Oil
 vim.keymap.set("n", "<leader>or", "<cmd>:e .<cr>", { silent = true })
 vim.keymap.set("n", "<leader>oc", "<cmd>:e %:p:h<cr>", { silent = true })
+-- vim.keymap.set("n", "<leader>oe", vim.cmd.edit({ bang = true }), { silent = true })
+
+-- LSP
+vim.keymap.set("n", "<leader>lr", "<cmd>:LspRestart", { silent = true })
 
 -- nnoremap <c-s> :update!<cr>
 -- inoremap <c-s> <esc>:update!<cr>
@@ -78,11 +85,11 @@ vim.keymap.set("n", "<leader>oc", "<cmd>:e %:p:h<cr>", { silent = true })
 vim.keymap.set("n", "<leader>goi", "<cmd>GoImport<cr>", { silent = true, noremap = true })
 vim.keymap.set("n", "gr", "<cmd>GoRename<cr>", { silent = true, noremap = true })
 vim.keymap.set("n", "<leader>gof", "<cmd>GoFillStruct<cr>", { silent = true, noremap = true })
-vim.keymap.set("n", "<leader>got", "<cmd>GoTestFunc -F -v<cr>", { silent = true, noremap = true })
+vim.keymap.set("n", "<leader>rt", neotest.run.run, { silent = true, noremap = true })
 
 vim.keymap.set("n", "<leader>tn", "<cmd>tabnew<cr>", { silent = true, noremap = true })
 vim.keymap.set("n", "<leader>tc", "<cmd>tabclose<cr>", { silent = true, noremap = true })
 vim.keymap.set("t", "<Esc>", "<C-\\><C-n>", { silent = true, noremap = true })
 
 vim.keymap.set("n", "<leader>e", "<cmd>:Ex<cr>", { silent = true, noremap = true })
-vim.keymap.set("n", "<leader>c", "<cmd>:Copilot panel<cr>", { silent = true, noremap = true })
+vim.keymap.set("n", "<leader>cp", "<cmd>:Copilot panel<cr>", { silent = true, noremap = true })

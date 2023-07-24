@@ -1,7 +1,9 @@
-local autotag = require('nvim-ts-autotag')
+local M = { "windwp/nvim-ts-autotag" }
 
-autotag.setup({
+M.opts = {
     check_ts = true,
     enable_check_bracket_line = false,
     enable_moveright = false,
-})
+}
+
+return M
