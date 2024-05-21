@@ -1,16 +1,35 @@
-local M = { "zbirenbaum/copilot-cmp" }
+-- local M = { "Exafunction/codeium.vim" }
+--
+-- M.event = "BufEnter"
+--
+-- M.config = function ()
+--     vim.keymap.set('i', '<leader>aa', function () return vim.fn['codeium#Accept']() end, { expr = true })
+--     vim.keymap.set('i', '<leader>an', function() return vim.fn['codeium#CycleCompletions'](1) end, { expr = true })
+--     vim.keymap.set('i', '<leader>ap', function() return vim.fn['codeium#CycleCompletions'](-1) end, { expr = true })
+--     vim.keymap.set('i', '<leader>ac', function() return vim.fn['codeium#Clear']() end, { expr = true })
+-- end
+--
+-- return M
 
-M.dependencies = {
-    "zbirenbaum/copilot.lua"
-}
+-- local M = { "zbirenbaum/copilot.lua" }
+-- M.event = "InsertEnter"
+-- M.config = function()
+--     require("copilot").setup({
+--         suggestion = {
+--             enabled = true,
+--             auto_trigger = true,
+--             debounce = 5,
+--             keymap = {
+--                 accept = "<leader>aa",
+--                 accept_word = false,
+--                 accept_line = false,
+--                 next = "<leader>an",
+--                 prev = "<leader>ap",
+--                 dismiss = "<leader>ac",
+--             },
+--         },
+--     })
+-- end
+-- return M
 
-M.config = function()
-    require("copilot").setup({
-        suggestion = { enabled = false },
-        panel = { enabled = false },
-    })
-
-    require("copilot_cmp").setup()
-end
-
-return M
+return {}

@@ -4,7 +4,7 @@ M.dependencies = {
     "JoosepAlviste/nvim-ts-context-commentstring"
 }
 
-M.config = function ()
+M.config = function()
     local tscontextcomment = require('ts_context_commentstring.integrations.comment_nvim')
 
     require("Comment").setup({

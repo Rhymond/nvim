@@ -14,12 +14,12 @@ M.opts = {
         enable = true,
         additional_vim_regex_highlighting = false,
     },
-    -- autopairs = {
-    --   enable = true,
-    -- },
-    -- autotag = {
-    --   enable = true,
-    -- },
+    autopairs = {
+        enable = true,
+    },
+    autotag = {
+        enable = true,
+    },
     -- incremental_selection = {
     --   enable = true,
     --   keymaps = {
@@ -32,15 +32,11 @@ M.opts = {
     indent = {
         enable = true,
         disable = function(lang, buf)
-            if lang == "php" or lang == "yaml" then
+            if lang == "php" or lang == "yaml" or lang == "javascript" then
                 return false
             end
             return true
         end,
-    },
-    context_commentstring = {
-        enable = true,
-        enable_autocmd = false
     },
     textobjects = {
         -- select = {

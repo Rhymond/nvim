@@ -11,7 +11,6 @@ M.dependencies = {
     },
     "jwalton512/vim-blade",
     "jose-elias-alvarez/null-ls.nvim",
-    "jose-elias-alvarez/nvim-lsp-ts-utils",
 }
 
 M.config = function()
@@ -21,6 +20,7 @@ M.config = function()
     local rusttools = require("rust-tools")
     local signature = require('lsp_signature')
     local cmplsp = require("cmp_nvim_lsp")
+    local formattingKey = "<space>f"
 
     require("mason").setup()
     require("mason-lspconfig").setup()
@@ -30,9 +30,15 @@ M.config = function()
     local capabilities = cmplsp.default_capabilities(cap)
 
     local formatting_callback = function(client, bufnr)
-        vim.keymap.set('n', '<space>f', function()
+        vim.keymap.set('n', formattingKey, function()
             local params = util.make_formatting_params({})
             client.request('textDocument/formatting', params, nil, bufnr)
+            -- vim.lsp.buf.format({
+            --     bufnr = bufnr,
+            --     filter = function(client)
+            --         return client.name == "null-ls"
+            --     end,
+            -- })
         end, { buffer = bufnr })
     end
 
@@ -48,11 +54,14 @@ M.config = function()
         vim.api.nvim_buf_set_keymap(bufnr, 'n', '<space>e', '<cmd>lua vim.diagnostic.open_float()<CR>', opts)
         vim.api.nvim_buf_set_keymap(bufnr, 'n', '[d', '<cmd>lua vim.diagnostic.goto_prev()<CR>', opts)
         vim.api.nvim_buf_set_keymap(bufnr, 'n', ']d', '<cmd>lua vim.diagnostic.goto_next()<CR>', opts)
+        vim.api.nvim_buf_set_keymap(bufnr, 'n', '<leader>dd', '<cmd>lua vim.diagnostic.setqflist()<CR>', opts)
 
         signature.on_attach({
             bind = true,
-            timer_interval = 50,
-            hint_enable = false
+            -- timer_interval = 50,
+            floating_window = true,
+            hint_enable = false,
+            -- hint_inline = function() return "eol" end,
         })
     end
 
@@ -72,17 +81,36 @@ M.config = function()
         end
     })
 
+    local function organize_imports()
+        local params = {
+            command = "_typescript.organizeImports",
+            arguments = { vim.api.nvim_buf_get_name(0) },
+            title = ""
+        }
+        vim.lsp.buf.execute_command(params)
+    end
+
     lsp.tsserver.setup({
         capabilities = capabilities,
         on_attach = function(client, bufnr)
             local opts = { silent = true }
             on_attach(client, bufnr)
-            local ts_utils = require("nvim-lsp-ts-utils")
-            ts_utils.setup({})
-            ts_utils.setup_client(client)
-            vim.api.nvim_buf_set_keymap(bufnr, 'n', 'gs', ':TSLspOrganize<CR>', opts)
-            vim.api.nvim_buf_set_keymap(bufnr, 'n', 'gi', ':TSLspImportAll<CR>', opts)
+            vim.api.nvim_buf_set_keymap(bufnr, 'n', 'tsi', '<cmd>:OrganizeImports<CR>', opts)
         end,
+        commands = {
+            OrganizeImports = {
+                organize_imports,
+                description = "Organize Imports"
+            }
+        }
+    })
+
+    lsp.yamlls.setup({
+        yaml = {
+            schemaStore = {
+                enable = true
+            }
+        }
     })
 
     lsp.lua_ls.setup({
@@ -100,6 +128,12 @@ M.config = function()
         end,
     })
 
+    lsp.tailwindcss.setup({
+        capabilities = capabilities,
+        on_attach = function(client, bufnr)
+            on_attach(client, bufnr)
+        end,
+    })
     -- local cfg = require'go.lsp'.config()
     -- cfg.on_attach = function(client, bufnr)
     --     formatting_callback(client, bufnr)
@@ -108,6 +142,14 @@ M.config = function()
     -- end
     -- cfg.capabilities = capabilities
     -- lsp.gopls.setup(cfg)
+
+    lsp.terraformls.setup({
+        capabilities = capabilities,
+        on_attach = function(client, bufnr)
+            -- formatting_callback(client, bufnr)
+            on_attach(client, bufnr)
+        end,
+    })
 
     lsp.gopls.setup({
         capabilities = capabilities,
@@ -120,6 +162,10 @@ M.config = function()
             gopls = {
                 analyses = {
                     staticcheck = true,
+                },
+                hints = {
+                    constantValues = true,
+                    functionTypeParameters = true,
                 }
             }
         }
@@ -153,6 +199,14 @@ M.config = function()
         end,
     })
 
+    lsp.volar.setup({
+        capabilities = capabilities,
+        on_attach = function(client, bufnr)
+            -- formatting_callback(client, bufnr)
+            on_attach(client, bufnr)
+        end,
+    })
+
     lsp.html.setup({
         capabilities = capabilities,
         filetypes = { "html", "blade" },
@@ -171,12 +225,12 @@ M.config = function()
         end
     })
 
-    lsp.spectral.setup {
+    lsp.spectral.setup({
         capabilities = capabilities,
         on_attach = function(client, bufnr)
             on_attach(client, bufnr)
         end,
-    }
+    })
 
     rusttools.setup({
         tools = {
@@ -208,12 +262,12 @@ M.config = function()
         null_ls.builtins.code_actions.eslint_d,
         null_ls.builtins.formatting.prettierd,
         -- null_ls.builtins.diagnostics.revive,
-        null_ls.builtins.formatting.golines.with({
-            extra_args = {
-                "--max-len=180",
-                "--base-formatter=gofumpt",
-            },
-        })
+        -- null_ls.builtins.formatting.golines.with({
+        --     extra_args = {
+        --         "--max-len=180",
+        --         "--base-formatter=gofumpt",
+        --     },
+        -- })
     }
 
     -- for go.nvim

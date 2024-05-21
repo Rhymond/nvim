@@ -1,35 +1,17 @@
 local builtin = require('telescope.builtin')
 local extensions = require('telescope').extensions
--- local dap = require('dap')
--- local dapgo = require('dap-go')
--- local dapui = require('dapui')
-local neotest = require('neotest')
-
--- A typical debug flow consists of:
---
--- Setting breakpoints via :lua require'dap'.toggle_breakpoint().
--- Launching debug sessions and resuming execution via :lua require'dap'.continue().
--- Stepping through code via :lua require'dap'.step_over() and :lua require'dap'.step_into().
--- Inspecting the state via the built-in REPL: :lua require'dap'.repl.open() or using the widget UI (:help dap-widgets)
--- vim.keymap.set("n", "<leader>b", dap.toggle_breakpoint, { silent = true })
--- vim.keymap.set("n", "<F5>", dap.continue, { silent = true })
--- vim.keymap.set("n", "<F10>", dap.step_over, { silent = true })
--- vim.keymap.set("n", "<F11>", dap.step_into, { silent = true })
--- vim.keymap.set("n", "<F12>", dap.step_out, { silent = true })
--- vim.keymap.set("n", "<leader>dt", dapgo.debug_test, { silent = true })
--- vim.keymap.set("n", "<leader>do", dapui.toggle, { silent = true })
--- vim.keymap.set("n", "<leader>dl", dap.run_last, { silent = true })
-
+local opts = { noremap = true, silent = true }
 
 -- Telescope
 vim.keymap.set("n", "<leader>ff", function()
-    require("telescope.builtin").find_files({ cwd = require("oil").get_current_dir() })
-end, {})
+    builtin.find_files({ cwd = require("oil").get_current_dir() })
+end, opts)
 vim.keymap.set("n", "<leader>fg", function()
-    require("telescope.builtin").live_grep({ cwd = require("oil").get_current_dir() })
-end, {})
+    builtin.live_grep({ cwd = require("oil").get_current_dir() })
+end, opts)
+-- vim.keymap.set('n', '/', builtin.current_buffer_fuzzy_find, {noremap = true, silent = true})
 vim.keymap.set("n", "<leader>fg", extensions.live_grep_args.live_grep_args, {})
-vim.keymap.set("n", "<leader>gs", builtin.git_status, {})
+vim.keymap.set("n", "<leader>fd", builtin.git_status, {})
 vim.keymap.set("n", "<leader>fb", builtin.buffers, {})
 vim.keymap.set("n", "<leader>gr", builtin.lsp_references, {})
 vim.keymap.set("n", "<leader>gi", builtin.lsp_implementations, {})
@@ -37,17 +19,20 @@ vim.keymap.set("n", "<leader>gd", builtin.lsp_definitions, {})
 
 -- Trouble
 vim.keymap.set("n", "<leader>xx", "<cmd>TroubleToggle quickfix<cr>", { silent = true, noremap = true })
+vim.keymap.set("n", "<leader>xw", "<cmd>TroubleToggle workspace_diagnostics<cr>", { silent = true, noremap = true })
 
 -- Merge Tool, Diff View
 vim.keymap.set("n", "<leader>dv", "<cmd>DiffViewOpen<cr>", { silent = true })
 
 -- Oil
-vim.keymap.set("n", "<leader>or", "<cmd>:e .<cr>", { silent = true })
-vim.keymap.set("n", "<leader>oc", "<cmd>:e %:p:h<cr>", { silent = true })
--- vim.keymap.set("n", "<leader>oe", vim.cmd.edit({ bang = true }), { silent = true })
+vim.keymap.set("n", "<leader>or", "<cmd>:Oil --float .<cr>", { silent = true })
+vim.keymap.set("n", "<leader>oc", "<cmd>:Oil --float %:p:h<cr>", { silent = true })
 
 -- LSP
 vim.keymap.set("n", "<leader>lr", "<cmd>:LspRestart", { silent = true })
+
+-- Aerial
+vim.keymap.set("n", "<leader>at", "<cmd>:AerialToggle<cr>", { silent = true })
 
 -- nnoremap <c-s> :update!<cr>
 -- inoremap <c-s> <esc>:update!<cr>
@@ -85,7 +70,8 @@ vim.keymap.set("n", "<leader>lr", "<cmd>:LspRestart", { silent = true })
 vim.keymap.set("n", "<leader>goi", "<cmd>GoImport<cr>", { silent = true, noremap = true })
 vim.keymap.set("n", "gr", "<cmd>GoRename<cr>", { silent = true, noremap = true })
 vim.keymap.set("n", "<leader>gof", "<cmd>GoFillStruct<cr>", { silent = true, noremap = true })
-vim.keymap.set("n", "<leader>rt", neotest.run.run, { silent = true, noremap = true })
+vim.keymap.set("i", "<leader>gof", "<cmd>GoFillStruct<cr>", { silent = true, noremap = true })
+-- vim.keymap.set("n", "<leader>rt", neotest.run.run, { silent = true, noremap = true })
 
 vim.keymap.set("n", "<leader>tn", "<cmd>tabnew<cr>", { silent = true, noremap = true })
 vim.keymap.set("n", "<leader>tc", "<cmd>tabclose<cr>", { silent = true, noremap = true })

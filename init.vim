@@ -1,6 +1,7 @@
 lua require('_lazy')
 lua require('_plugins')
 lua require('_keymaps')
+lua require('_autocommands')
 
 set termguicolors
 
@@ -29,8 +30,10 @@ set scrolloff=10
 " set smartindent
 " filetype indent plugin on
 autocmd Filetype typescriptreact setlocal expandtab tabstop=2 shiftwidth=2 softtabstop=2
+autocmd Filetype javascriptreact setlocal expandtab tabstop=2 shiftwidth=2 softtabstop=2
 autocmd Filetype typescript setlocal expandtab tabstop=2 shiftwidth=2 softtabstop=2
 autocmd Filetype javascript setlocal expandtab tabstop=2 shiftwidth=2 softtabstop=2
+autocmd Filetype vue setlocal expandtab tabstop=2 shiftwidth=2 softtabstop=2
 " autocmd Filetype php setlocal expandtab tabstop=4 shiftwidth=4 softtabstop=4
 " autocmd BufRead,BufNewFile ~/Projects/php/gearjot/frontend/views/** set filetype=blade
 
@@ -51,5 +54,5 @@ set number relativenumber
 set cmdheight=0
 set scrolloff=999
 
-nnoremap <c-s> :update!<cr>
-inoremap <c-s> <esc>:update!<cr>
+" nnoremap <c-s> :update!<cr>
+" inoremap <c-s> <esc>:update!<cr>

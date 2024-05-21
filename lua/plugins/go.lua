@@ -11,10 +11,13 @@ M.dependencies = { -- optional packages
 M.config = function()
     require('go').setup({
         luasnip = true,
-        trouble = false,
+        lsp_cfg = false,
+        lsp_inlay_hints = {
+            enable = false,
+        }
     })
 
-    local format_sync_grp = vim.api.nvim_create_augroup("GoImport", {})
+    local format_sync_grp = vim.api.nvim_create_augroup("GoFormat", {})
     vim.api.nvim_create_autocmd("BufWritePre", {
         pattern = "*.go",
         callback = function()
@@ -22,8 +25,6 @@ M.config = function()
         end,
         group = format_sync_grp,
     })
-
-    -- vim.api.nvim_exec([[ autocmd BufWritePre (InsertLeave?) <buffer> lua vim.lsp.buf.formatting_sync(nil,500) ]], false)
 end
 
 

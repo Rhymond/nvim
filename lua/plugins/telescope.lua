@@ -33,12 +33,15 @@ M.config = function()
                 "--column",
                 "--smart-case",
             },
+            file_ignore_patterns = {
+                "node_modules"
+            }
         },
         pickers = {
             find_files = {
                 hidden = true,
                 -- `hidden = true` will still show the inside of `.git/` as it's not `.gitignore`d.
-                find_command = { "rg", "--files", "--hidden", "--glob", "!**/.git/*" },
+                find_command = { "rg", "--files", "--smart-case", "--hidden", "--glob", "!**/.git/*" },
                 on_input_filter_cb = function(prompt)
                     local find_colon = string.find(prompt, ":")
                     if find_colon then
