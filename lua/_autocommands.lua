@@ -1,6 +1,14 @@
 -- Example for a project-specific action
 local group = vim.api.nvim_create_augroup("ProjectAutocommands", { clear = true })
 
+local function gomod_path()
+    local go_mod_path = vim.fn.findfile('go.mod', vim.fn.expand('%:p:h') .. ';')
+    if go_mod_path == '' then
+        return false
+    end
+    return vim.fn.fnamemodify(go_mod_path, ":h")
+end
+
 local function is_sqlc_project()
     local go_mod_path = vim.fn.findfile('go.mod', vim.fn.expand('%:p:h') .. ';')
     if go_mod_path == '' then
@@ -105,20 +113,20 @@ end
 --     group = group,
 -- })
 
-vim.api.nvim_create_autocmd("BufWritePost", {
-    pattern = "*.go",
-    callback = function()
-        local lines = vim.api.nvim_buf_get_lines(0, 0, -1, false)
-        for _, line in ipairs(lines) do
-            if line:find("counterfeiter") then
-                local file = vim.api.nvim_buf_get_name(0)
-                vim.fn.jobstart({ "go", "generate", file }, { detach = true })
-                return
-            end
-        end
-    end,
-    group = group,
-})
+-- vim.api.nvim_create_autocmd("BufWritePost", {
+--     pattern = "*.go",
+--     callback = function()
+--         local lines = vim.api.nvim_buf_get_lines(0, 0, -1, false)
+--         for _, line in ipairs(lines) do
+--             if line:find("counterfeiter") then
+--                 local file = vim.api.nvim_buf_get_name(0)
+--                 vim.fn.jobstart({ "go", "generate", file }, { detach = true })
+--                 return
+--             end
+--         end
+--     end,
+--     group = group,
+-- })
 
 vim.api.nvim_create_autocmd("BufWritePost", {
     pattern = "*.yml",
@@ -143,7 +151,8 @@ vim.api.nvim_create_autocmd("BufWritePost", {
     pattern = "*.sql",
     callback = function()
         if is_sqlc_project() then
-            local output = vim.fn.system('sqlc generate')
+            local root_path = gomod_path()
+            local output = vim.fn.system('docker run --rm -v ' .. root_path .. ':/src -w /src sqlc/sqlc:1.18.0 generate')
             if vim.v.shell_error ~= 0 then
                 print(output)
             end

@@ -34,6 +34,7 @@ autocmd Filetype javascriptreact setlocal expandtab tabstop=2 shiftwidth=2 softt
 autocmd Filetype typescript setlocal expandtab tabstop=2 shiftwidth=2 softtabstop=2
 autocmd Filetype javascript setlocal expandtab tabstop=2 shiftwidth=2 softtabstop=2
 autocmd Filetype vue setlocal expandtab tabstop=2 shiftwidth=2 softtabstop=2
+autocmd Filetype liquid setlocal expandtab tabstop=2 shiftwidth=2 softtabstop=2
 " autocmd Filetype php setlocal expandtab tabstop=4 shiftwidth=4 softtabstop=4
 " autocmd BufRead,BufNewFile ~/Projects/php/gearjot/frontend/views/** set filetype=blade
 

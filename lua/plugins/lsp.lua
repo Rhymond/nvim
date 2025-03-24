@@ -3,14 +3,15 @@ local M = { "neovim/nvim-lspconfig" }
 M.dependencies = {
     "williamboman/mason-lspconfig.nvim",
     "williamboman/mason.nvim",
-    "ray-x/lsp_signature.nvim",
     "simrat39/rust-tools.nvim",
     {
         "iamcco/markdown-preview.nvim",
         build = "cd app && yarn install",
     },
     "jwalton512/vim-blade",
-    "jose-elias-alvarez/null-ls.nvim",
+    "nvimtools/none-ls.nvim",
+    "nvimtools/none-ls-extras.nvim",
+    "nanotee/sqls.nvim",
 }
 
 M.config = function()
@@ -18,12 +19,13 @@ M.config = function()
     local null_ls = require("null-ls")
     local util = require("vim.lsp.util")
     local rusttools = require("rust-tools")
-    local signature = require('lsp_signature')
     local cmplsp = require("cmp_nvim_lsp")
     local formattingKey = "<space>f"
 
     require("mason").setup()
-    require("mason-lspconfig").setup()
+    require("mason-lspconfig").setup {
+        automatic_installation = true
+    }
 
     local cap = vim.lsp.protocol.make_client_capabilities()
     cap.textDocument.completion.completionItem.snippetSupport = true
@@ -55,15 +57,16 @@ M.config = function()
         vim.api.nvim_buf_set_keymap(bufnr, 'n', '[d', '<cmd>lua vim.diagnostic.goto_prev()<CR>', opts)
         vim.api.nvim_buf_set_keymap(bufnr, 'n', ']d', '<cmd>lua vim.diagnostic.goto_next()<CR>', opts)
         vim.api.nvim_buf_set_keymap(bufnr, 'n', '<leader>dd', '<cmd>lua vim.diagnostic.setqflist()<CR>', opts)
-
-        signature.on_attach({
-            bind = true,
-            -- timer_interval = 50,
-            floating_window = true,
-            hint_enable = false,
-            -- hint_inline = function() return "eol" end,
-        })
+        -- vim.api.nvim_buf_set_keymap(bufnr, 'n', 'gr', '<cmd>lua vim.diagnostic.setqflist()<CR>', opts)
     end
+
+    -- lsp.cssmodules_ls.setup({
+    --     capabilities = capabilities,
+    --     on_attach = function(client, bufnr)
+    --         formatting_callback(client, bufnr)
+    --         on_attach(client, bufnr)
+    --     end
+    -- })
 
     lsp.cssls.setup({
         capabilities = capabilities,
@@ -90,7 +93,7 @@ M.config = function()
         vim.lsp.buf.execute_command(params)
     end
 
-    lsp.tsserver.setup({
+    lsp.ts_ls.setup({
         capabilities = capabilities,
         on_attach = function(client, bufnr)
             local opts = { silent = true }
@@ -151,6 +154,14 @@ M.config = function()
         end,
     })
 
+    lsp.shopify_theme_ls.setup({
+        capabilities = capabilities,
+        on_attach = function(client, bufnr)
+            -- formatting_callback(client, bufnr)
+            on_attach(client, bufnr)
+        end,
+    })
+
     lsp.gopls.setup({
         capabilities = capabilities,
 
@@ -202,7 +213,7 @@ M.config = function()
     lsp.volar.setup({
         capabilities = capabilities,
         on_attach = function(client, bufnr)
-            -- formatting_callback(client, bufnr)
+            formatting_callback(client, bufnr)
             on_attach(client, bufnr)
         end,
     })
@@ -216,14 +227,57 @@ M.config = function()
         end,
     })
 
-    lsp.sqlls.setup({
-        capabilities = capabilities,
-        -- filetypes = { "sql", "go" },
+    -- lsp.sqlls.setup({
+    --     capabilities = capabilities,
+    --     cmd = { "sql-language-server", "up", "--method", "stdio" },
+    --     filetypes = { "sql", "mysql" },
+    --     root_dir = function() return vim.loop.cwd() end,
+    --     on_attach = function(client, bufnr)
+    --         on_attach(client, bufnr)
+    --     end,
+    --     settings = {
+    --         connections = {
+    --             {
+    --                 driver = 'mysql',
+    --                 name = 'Local Gearjot',
+    --                 database = 'GearJot',
+    --                 user = 'root',
+    --                 password = 'root',
+    --                 host = '127.0.0.1',
+    --                 port = 3306
+    --             },
+    --         }
+    --     }
+    -- })
+
+
+    -- lsp.sqls.setup({
+    -- settings = {
+    --     sqls = {
+    --         connections = {
+    --             {
+    --                 driver = 'mysql',
+    --                 dataSourceName = 'root:root@tcp(127.0.0.1:3306)/GearJot',
+    --             },
+    --         },
+    --     },
+    -- },
+    -- })
+    lsp.sqls.setup {
         on_attach = function(client, bufnr)
-            require('sqlls').on_attach(client, bufnr)
-            on_attach(client, bufnr)
-        end
-    })
+            require('sqls').on_attach(client, bufnr) -- require sqls.nvim
+        end,
+        settings = {
+            sqls = {
+                connections = {
+                    {
+                        driver = 'mysql',
+                        dataSourceName = 'root:root@tcp(127.0.0.1:3306)/GearJot',
+                    },
+                },
+            },
+        },
+    }
 
     lsp.spectral.setup({
         capabilities = capabilities,
@@ -258,9 +312,13 @@ M.config = function()
     })
 
     local sources = {
-        null_ls.builtins.diagnostics.eslint_d,
-        null_ls.builtins.code_actions.eslint_d,
+        require("none-ls.diagnostics.eslint_d"),
+        require("none-ls.code_actions.eslint_d"),
         null_ls.builtins.formatting.prettierd,
+        -- null_ls.builtins.formatting.prettier.with({
+        --     filetypes = { "javascript", "typescript", "css", "html", "json", "yaml", "markdown", "liquid" }
+        -- }),
+        -- require("none-ls.formatting.prettierd"),
         -- null_ls.builtins.diagnostics.revive,
         -- null_ls.builtins.formatting.golines.with({
         --     extra_args = {

@@ -1,5 +1,4 @@
 local builtin = require('telescope.builtin')
-local extensions = require('telescope').extensions
 local opts = { noremap = true, silent = true }
 
 -- Telescope
@@ -10,16 +9,16 @@ vim.keymap.set("n", "<leader>fg", function()
     builtin.live_grep({ cwd = require("oil").get_current_dir() })
 end, opts)
 -- vim.keymap.set('n', '/', builtin.current_buffer_fuzzy_find, {noremap = true, silent = true})
-vim.keymap.set("n", "<leader>fg", extensions.live_grep_args.live_grep_args, {})
+vim.keymap.set("n", "<leader>fg", builtin.live_grep, {})
 vim.keymap.set("n", "<leader>fd", builtin.git_status, {})
 vim.keymap.set("n", "<leader>fb", builtin.buffers, {})
 vim.keymap.set("n", "<leader>gr", builtin.lsp_references, {})
 vim.keymap.set("n", "<leader>gi", builtin.lsp_implementations, {})
 vim.keymap.set("n", "<leader>gd", builtin.lsp_definitions, {})
-
--- Trouble
-vim.keymap.set("n", "<leader>xx", "<cmd>TroubleToggle quickfix<cr>", { silent = true, noremap = true })
-vim.keymap.set("n", "<leader>xw", "<cmd>TroubleToggle workspace_diagnostics<cr>", { silent = true, noremap = true })
+vim.keymap.set("n", "<leader>gs", builtin.lsp_dynamic_workspace_symbols, {})
+vim.keymap.set("n", "<leader>di", function()
+    builtin.diagnostics({ severity = vim.diagnostic.severity.ERROR })
+end, {})
 
 -- Merge Tool, Diff View
 vim.keymap.set("n", "<leader>dv", "<cmd>DiffViewOpen<cr>", { silent = true })
@@ -30,9 +29,6 @@ vim.keymap.set("n", "<leader>oc", "<cmd>:Oil --float %:p:h<cr>", { silent = true
 
 -- LSP
 vim.keymap.set("n", "<leader>lr", "<cmd>:LspRestart", { silent = true })
-
--- Aerial
-vim.keymap.set("n", "<leader>at", "<cmd>:AerialToggle<cr>", { silent = true })
 
 -- nnoremap <c-s> :update!<cr>
 -- inoremap <c-s> <esc>:update!<cr>
@@ -58,17 +54,11 @@ vim.keymap.set("n", "<leader>at", "<cmd>:AerialToggle<cr>", { silent = true })
 -- nnoremap <silent>gr :Lspsaga rename<CR>
 -- nnoremap <silent><leader>ca :Lspsaga code_action<CR>
 --
--- nnoremap <leader>xx <cmd>TroubleToggle<cr>
--- nnoremap <leader>xw <cmd>TroubleToggle workspace_diagnostics<cr>
--- nnoremap <leader>xd <cmd>TroubleToggle document_diagnostics<cr>
--- nnoremap <leader>xq <cmd>TroubleToggle quickfix<cr>
--- nnoremap <leader>xl <cmd>TroubleToggle loclist<cr>
---
 -- nnoremap <leader>tsi :TSLspImportAll<cr>
 -- nnoremap <leader>tso :TSLspOrganize<cr>
 
 vim.keymap.set("n", "<leader>goi", "<cmd>GoImport<cr>", { silent = true, noremap = true })
-vim.keymap.set("n", "gr", "<cmd>GoRename<cr>", { silent = true, noremap = true })
+-- vim.keymap.set("n", "gr", "<cmd>GoRename<cr>", { silent = true, noremap = true })
 vim.keymap.set("n", "<leader>gof", "<cmd>GoFillStruct<cr>", { silent = true, noremap = true })
 vim.keymap.set("i", "<leader>gof", "<cmd>GoFillStruct<cr>", { silent = true, noremap = true })
 -- vim.keymap.set("n", "<leader>rt", neotest.run.run, { silent = true, noremap = true })
